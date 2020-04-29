@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created by @南卡统爷 on 4/28/20 3:43 PM.
+Created by @Jiayu Wang on 4/28/20 3:43 PM.
 """
-__author__ = '@SCTongYe'
+__author__ = '@JiayuWang'
 
 
 from django.utils.safestring import mark_safe
@@ -11,13 +11,13 @@ from django.utils.safestring import mark_safe
 class JWPagination():
 
     def __init__(self, page_number, total_customer_count, page_linkpath, per_page_number=10, side_page_number=2):
-        # 自定义分页
-        # 需要的参数：
-            # 当前页码 page_number = request.GET.get('page', 1)
-            # 总数据量 total_customer_count = customer_objs = Customer.objects.all().count()
-            # 每页显示数据个数 per_page_number = 10
-            # 页码栏正中页数左右各显示几个页码 side_page_number = 2
-            # 部署页面的文件名 page_linkpath = 'customers'
+  
+        # PARAMS：
+            # page_number = request.GET.get('page', 1)
+            # total_customer_count = customer_objs = Customer.objects.all().count()
+            # per_page_number = 10
+            # side_page_number = 2
+            # page_linkpath = request.path
 
         try:
             page_number = int(page_number)
@@ -31,7 +31,7 @@ class JWPagination():
         self.page_linkpath = page_linkpath
         self.per_page_number = per_page_number
 
-        # 计算总数据量，定义单页显示数据个数，相除得总页数，如果有余数，总页数等于商加一
+        # _q: Quotient r: Remainder 
         _q, _r = divmod(total_customer_count, per_page_number)
 
         if _r:
@@ -46,8 +46,6 @@ class JWPagination():
 
         self.page_number = page_number
 
-        # 正中间显示页面
-
         start_page_number = page_number - side_page_number
         end_page_number = page_number + side_page_number
 
@@ -61,7 +59,6 @@ class JWPagination():
                 start_page_number = 1
 
             end_page_number = total_page_count
-
 
         self.start_page_number = start_page_number
         self.end_page_number = end_page_number
