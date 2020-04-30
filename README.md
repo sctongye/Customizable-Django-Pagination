@@ -18,6 +18,7 @@ With this customzeable pagination, you only need to setup once by passing three 
 ## Intruction
 
 1, Save `jw_pagination.py` into your `utils` folder or wherever you want;
+
 2,
 ```python
 from jw_pagination import JWPagination
