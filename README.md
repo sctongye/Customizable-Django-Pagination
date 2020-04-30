@@ -13,7 +13,7 @@ With this customzeable pagination, you only need to setup once by passing three 
 - Bootstrap based, but you can also add your own style;
 - Simply assign the number of shown pagination item by giving a number in setting;
 - One shortcut on template, safe marked,, no more line of code.
-- 10 Items per page, five shown paging items by default.
+- Ten Items per page, five shown paging items by default.
 
 ## Intruction
 
@@ -28,6 +28,7 @@ page_linkpath = request.path # required
 page_number = request.GET.get('page', 1) # required
 total_customer_count = Customer.objects.all().count() # required
 
+search_string = request.GET.urlencode() # this is needed if you have search function
 per_page_number = 10 # optional, 10 by default
 side_page_number = 2 # optional, 2 by default
 ```
