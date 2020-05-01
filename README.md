@@ -29,13 +29,13 @@ page_linkpath = request.path # required
 page_number = request.GET.get('page', 1) # required
 total_customer_count = Customer.objects.all().count() # required
 
-search_string = request.GET.urlencode() # this is needed if you have search function
+search_string = request.GET # this is needed if you have search function
 per_page_number = 10 # optional, 10 by default
 side_page_number = 2 # optional, 2 by default
 ```
 4, 
 ```python
-page_obj = JWPagination(page_number, total_customer_count, page_linkpath)
+page_obj = JWPagination(page_number, total_customer_count, page_linkpath, search_string)
 pagination_html = page_obj.pagination_html
 
 # Slice operation to get data for each page
