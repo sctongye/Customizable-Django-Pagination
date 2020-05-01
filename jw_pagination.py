@@ -5,7 +5,6 @@ Created by @Jiayu Wang on 4/28/20 3:43 PM.
 __author__ = '@JiayuWang'
 
 
-import re
 from django.utils.safestring import mark_safe
 
 
@@ -30,8 +29,7 @@ class JWPagination():
         self.total_customer_count = total_customer_count
         self.page_linkpath = page_linkpath
         self.per_page_number = per_page_number
-        self.search_string = re.sub('page=\d+', '', search_string) if 'page=' in search_string else search_string +'&'
-        print(self.search_string)
+        self.search_string = search_string.copy()  # QuerySet is immutable but it's copy or deepcopy is mutable.
 
         _q, _r = divmod(total_customer_count, per_page_number)
 
@@ -87,18 +85,29 @@ class JWPagination():
 
         page_pre_html = '<nav aria-label="Page navigation example"><ul class="pagination">'
         if self.start_page_number > 1:
-            page_pre_html = '<nav aria-label="Page navigation example"><ul class="pagination"><li><a href="{0}?{2}page={1}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>'.format(self.page_linkpath, self.page_number-1, self.search_string)
+
+            self.search_string['page'] = self.page_number-1
+
+            page_pre_html = '<nav aria-label="Page navigation example"><ul class="pagination"><li><a href="{0}?{1}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>'.format(self.page_linkpath, self.search_string.urlencode())
+
         pagination_html += page_pre_html
 
         for i in self.total_page_count_range:
+
+            self.search_string['page'] = i
+
             if i == self.page_number:
-                pagination_html += '<li class="active" class="page-item"><a class="page-link" href="{0}?{3}page={1}">{2}</a></li>'.format(self.page_linkpath, i, i, self.search_string)
+                pagination_html += '<li class="active" class="page-item"><a class="page-link" href="{0}?{1}">{2}</a></li>'.format(self.page_linkpath, self.search_string.urlencode(), i)
             else:
-                pagination_html += '<li class="page-item"><a class="page-link" href="{0}?{3}page={1}">{2}</a></li>'.format(self.page_linkpath, i, i, self.search_string)
+                pagination_html += '<li class="page-item"><a class="page-link" href="{0}?{1}">{2}</a></li>'.format(self.page_linkpath, self.search_string.urlencode(), i)
+
         page_next_html = '</ul></nav>'
-        
         if self.end_page_number < self.total_page_count:
-            page_next_html = '<li><a href="{0}?{2}page={1}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li></ul></nav>'.format(self.page_linkpath, self.page_number+1, self.search_string)
+
+            self.search_string['page'] = self.page_number+1
+
+            page_next_html = '<li><a href="{0}?{1}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li></ul></nav>'.format(self.page_linkpath, self.search_string.urlencode())
+
         pagination_html += page_next_html
 
         return mark_safe(pagination_html)
